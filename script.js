@@ -1,52 +1,48 @@
-// Get the form and the table body
-const form = document.getElementById("orderForm");
-const ordersTable = document.querySelector("#ordersTable tbody");
+document.addEventListener("DOMContentLoaded", function() {
+    // Sign up form
+    const signUpForm = document.getElementById('sign-up-form');
+    signUpForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Handle sign-up logic
+        alert('Sign-up logic here');
+    });
 
-// Load any saved orders from localStorage
-let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    // Login form
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Handle login logic
+        let username = document.getElementById('login-username').value;
+        let password = document.getElementById('login-password').value;
 
-// Function to display all orders on the page
-function renderOrders() {
-  ordersTable.innerHTML = ""; // clear old data
-  orders.forEach((order) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${order.username}</td>
-      <td>${order.service}</td>
-      <td>${order.quantity}</td>
-      <td>${order.status}</td>
-    `;
-    ordersTable.appendChild(row);
-  });
+        if (username === 'testuser' && password === 'password123') {
+            window.location.href = 'dashboard.html'; // Redirect to dashboard
+        } else {
+            alert('Incorrect credentials!');
+        }
+    });
 
-  // Update summary cards
-  document.getElementById("ordersCount").textContent = orders.length;
-  document.getElementById("completedCount").textContent = orders.filter(o => o.status === "Completed ✅").length;
-  document.getElementById("pendingCount").textContent = orders.filter(o => o.status === "Pending ⏳").length;
-}
+    // Payment form
+    const paymentForm = document.getElementById('payment-form');
+    paymentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let phoneNumber = document.getElementById('phone-number').value;
+        let amount = document.getElementById('amount').value;
 
-// Handle new order submission
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
+        // Simulate a network error
+        setTimeout(function() {
+            document.getElementById('error-message').innerText = "Network error! Pay manually.";
+        }, 3000);
+    });
 
-  const username = document.getElementById("username").value.trim();
-  const quantity = document.getElementById("quantity").value.trim();
-  const service = document.getElementById("service").value;
-
-  if (!username || !quantity) return alert("Please fill in all fields");
-
-  const newOrder = {
-    username,
-    quantity,
-    service,
-    status: "Pending ⏳"
-  };
-
-  orders.push(newOrder);
-  localStorage.setItem("orders", JSON.stringify(orders)); // save permanently
-  renderOrders();
-  form.reset();
+    // Withdrawal logic
+    const withdrawButton = document.getElementById('withdraw');
+    withdrawButton.addEventListener('click', function() {
+        const amountToWithdraw = prompt("Enter amount to withdraw:");
+        if (amountToWithdraw >= 650) {
+            alert('Successfully withdrawn ' + amountToWithdraw);
+        } else {
+            alert('Minimum withdrawal is KES 650. Please top up.');
+        }
+    });
 });
-
-// Display existing orders when page loads
-renderOrders();
